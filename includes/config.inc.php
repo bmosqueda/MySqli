@@ -27,6 +27,7 @@ defined('DS') ? NULL : define('DS', DIRECTORY_SEPARATOR);
 // Define absolute path to server root
 
 defined('SITE_ROOT') ? NULL : define('SITE_ROOT', dirname(dirname(__FILE__)).DS);
+defined('PAGE_URL') ? NULL : define('PAGE_URL', 'localhost'.DS.'mysqli_estructura'.DS);
 
 // Define absolute path to includes
 defined('INCLUDE_PATH') ? NULL : define('INCLUDE_PATH', SITE_ROOT.'includes'.DS);
@@ -35,7 +36,8 @@ defined('LIB_PATH') ? NULL : define('LIB_PATH', INCLUDE_PATH.'libraries'.DS);
 defined('MODEL_PATH') ? NULL : define('MODEL_PATH', INCLUDE_PATH.'models'.DS);
 defined('VIEW_PATH') ? NULL : define('VIEW_PATH', INCLUDE_PATH.'views'.DS);
 defined('IMAGES_PATH') ? NULL : define('IMAGES_PATH', 'includes'.DS.'images'.DS);
-
+defined('BOOTSTRAP_PATH') ? NULL : define('BOOTSTRAP_PATH', 'includes'.DS.'bootstrap');
+defined('JQUERY_PATH') ? NULL : define('JQUERY_PATH', 'includes'.DS.'jquery');
 ////////////////////////////////////////////////////////////////////////////////
 // Include library, helpers, functions
 ////////////////////////////////////////////////////////////////////////////////

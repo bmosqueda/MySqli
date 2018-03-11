@@ -1,6 +1,6 @@
 <?php
 
-// Initialize site configuration
+// Initialize si te configuration
 require_once('includes/config.inc.php');
 
 // Check the querystring for a numeric id
