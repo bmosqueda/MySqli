@@ -12,8 +12,7 @@
 		<?php foreach($posts as $post): ?>
 			<tbody>	 
 				<tr>				
-					<td id="<?php echo 'title'.$post->id;?>"><h5><a href="read.php?id=
-								<?php echo $post->id;?>"><?php echo $post->title;?></a></h5></td>
+					<td id="<?php echo 'title'.$post->id;?>"><h5><a id="<?php echo $post->id;?>" href="#viewBlog" 	data-toggle="modal" class="view"><?php echo $post->title;?></a></h5></td>
 					<td id="<?php echo 'content'.$post->id;?>"><?php echo $post->content;?></td>
 					<td id="<?php echo 'created'.$post->id;?>"><?php echo $post->created;?></td>
 					<td>
@@ -103,6 +102,7 @@
 		</div>
 	</div>
 
+	<!--Delete blog-->
 	<div id="deleteBlog" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -119,6 +119,27 @@
 			</div>
 		</div>
 	</div>
+
+	<!--View blog-->
+	<div id="viewBlog" class="modal fade" data-backdrop="static" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 id="viewTitle"></h1>
+					<button type="button" class="close" data-dismiss="modal">x</button>
+				</div>
+				<div class="modal-body">
+					<h1 style="font-size: 24px" id="viewContent"></h1>
+					<br>
+					<h1 style="font-size: 16px" id="viewCreated"></h1>
+					<br>
+					<button class="btn" type="button" data-dismiss="modal">Aceptar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--End modal windows-->
 
 	<script type="text/javascript">
 		//it receive a form and it validate if all the fields are complete
@@ -143,7 +164,6 @@
 			return !vacio;
 		}
 
-
 		$(".newPost").click(function()
 		{
 			$("#title").val("");
@@ -164,6 +184,14 @@
 			var postName =$("#title" + $(this).val()).text();
 			$("#lblEliminar").text("¿Estás seguro que deseas eliminar el post '" + postName + "'?");
 			$("#buttonDelete").val($(this).val());
+		})
+
+		$(".view").click(function()
+		{
+			var idPost = this.id;
+			$("#viewTitle").text($('#title' + idPost).text());
+			$("#viewContent").text($('#content' + idPost).text());
+			$("#viewCreated").text($('#created' + idPost).text());
 		})
 
 		function eliminar(button)
