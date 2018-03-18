@@ -8,7 +8,7 @@ class Post {
 	public $created;
 	
 	public static function getBySql($sql) {
-		
+		//Comment
 		// Open database connection
 		$database = new Database();
 		
