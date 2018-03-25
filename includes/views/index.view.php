@@ -126,7 +126,7 @@
 
 	<script type="text/javascript">
 		const tbody = document.getElementById('tbody')
-		const properties =['title', 'content', 'created']
+		const properties =['content', 'created']
 
 		const titleEdit = document.getElementById('titleEdit')
 		const contentEdit = document.getElementById('contentEdit')
@@ -150,7 +150,7 @@
 		{
 			var idPost = $(this).val();
 			let title = document.getElementById("tdtitle" + idPost);
-			titleEdit.value = title.textContent;
+			titleEdit.value = title.childNodes[0].text;
 
 			let content = document.getElementById("tdcontent" + idPost);
 			contentEdit.value = content.textContent;
@@ -163,27 +163,38 @@
 		{
 			let title = document.getElementById('tdtitle' + $(this).val());
 			console.log(title);
-			$("#lblEliminar").text("¿Estás seguro que deseas eliminar el post '" + title.textContent + "'?");
+			$("#lblEliminar").text("¿Estás seguro que deseas eliminar el post '" + title.childNodes[0].text + "'?");
 			$("#deleteButton").val($(this).val());
 		})
 
-		$(".view").click(function()
-		{
+		$("tbody").on('click', 'a.view', function() {
 			var idPost = this.id;
-			$("#viewTitle").text($('#title' + idPost).text());
-			$("#viewContent").text($('#content' + idPost).text());
-			$("#viewCreated").text($('#created' + idPost).text());
-		})
+			let title = document.getElementById('tdtitle' + idPost);
+			let content = document.getElementById('tdcontent' + idPost);
+			let created = document.getElementById('tdcreated' + idPost);
 
-		function eliminar(button)
-		{
-			location.href="delete.php?id=" + button.value;
-		}
+			$("#viewTitle").text(title.childNodes[0].text);
+			$("#viewContent").text(content.textContent);
+			$("#viewCreated").text(created.textContent);
+		})
 
 		function addRow(data)
 		{
-			let tr = document.createElement('tr');
-			tr.id = "tr" + data['id'];
+			let tr = document.createElement('tr')
+			tr.id = "tr" + data['id']
+
+			let tdtitle = document.createElement('td')
+			tdtitle.id = 'tdtitle' + data['id']
+
+			let a = document.createElement('a')
+			a.setAttribute('href', '#viewBlog')
+			a.setAttribute('id', data['id'])
+			a.setAttribute('data-toggle', 'modal')
+			a.className = "view"
+			a.text = data['title']
+			tdtitle.appendChild(a)
+			tr.appendChild(tdtitle)
+
 			properties.forEach(property => {
 				let td = document.createElement("td")
 				td.textContent = data[property]
@@ -232,11 +243,9 @@
 			let tds = tr.childNodes;
 			console.log(tds);
 
-			for (var i = 0; i < 2; i++) 
-			{
-				tds[i].textContent = data[properties[i]]
-				console.log(tds[i].textContent);
-			}
+			tds[0].childNodes[0].text = data['title'];
+
+			tds[1].textContent = data[properties[0]];
 
 			let buttons = tds[3].childNodes;
 			buttons[0].value = data['id'];

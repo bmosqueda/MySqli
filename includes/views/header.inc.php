@@ -9,7 +9,7 @@
   	<link href="<?php echo BOOTSTRAP_PATH.DS.'css'.DS.'bootstrap.min.css' ?>" rel="stylesheet" media="screen"></style>
   	<script src="<?php echo BOOTSTRAP_PATH.DS.'js'.DS.'bootstrap.min.js'?>"></script>
   	<script type="text/javascript"></script>
-  	<style type="text/css">
+  	<!-- <style type="text/css">
   		.cabecera
   		{
   			width: 100%; /* hacemos que la cabecera ocupe el ancho completo de la página */
@@ -19,7 +19,7 @@
 			height: 140px;
 			padding-left: 15px;
   		}
-  	</style>
+  	</style> -->
   	<script src="axios.js"></script>
 </head>
 	
@@ -35,7 +35,4 @@
 	</div>
 		<br>
 	<div class="container-fluid" style="z-index: 1100;">
-		<br><br>
-		<br><br>
-		<br><br>
-		<br><br>
+		
