@@ -1,7 +1,7 @@
 <?php require_once(VIEW_PATH.'header.inc.php'); ?>
 	
 	<table class="table">
-		<thead style="color: white">
+		<thead style="color: white" id="thead">
 			<tr style="background-color: #70A225">
 				<th>Autor</th>
 				<th>Contenido</th>
@@ -9,25 +9,10 @@
 				<th>Opciones</th>
 			</tr>
 		</thead>
-		<?php foreach($posts as $post): ?>
-			<tbody>	 
-				<tr>				
-					<td id="<?php echo 'title'.$post->id;?>"><h5><a id="<?php echo $post->id;?>" href="#viewBlog" 	data-toggle="modal" class="view"><?php echo $post->title;?></a></h5></td>
-					<td id="<?php echo 'content'.$post->id;?>"><?php echo $post->content;?></td>
-					<td id="<?php echo 'created'.$post->id;?>"><?php echo $post->created;?></td>
-					<td>
-						<button value="<?php echo $post->id;?>" type="button" class="btn btn-info edit" 
-								data-toggle="modal" data-target="#editBlog">Editar</button>
-						<button value="<?php echo $post->id;?>" type="button" class="btn btn-danger delete" 
-								data-toggle="modal" data-target="#deleteBlog">Eliminar</button>
-					</td>
-				</tr>				
-			</tbody>		
-		<?php endforeach; ?>
+			<tbody id="tbody"></tbody>
 	</table>
 
 	<!--Begin modal windows-->
-
 	<!--Edit blog modal-->
 	<div id="editBlog" class="modal fade" role="dialog">
 		<div class="modal-dialog">
@@ -39,19 +24,18 @@
 				</div>
 				<div class="modal-body">
 
-					<form method="POST" action="create.php"
-							onsubmit="return validate(this)">
+					<form id="formEdit">
 						<div class="container">
 							<div class="form-group">						
 								<label for="title">Título</label>									
-								<input id="title" name="title" type="text" size="75" class="form-control" autofocus/>
+								<input id="titleEdit" name="title" type="text" size="75" class="form-control" autofocus/>
 							</div>
 							<div class="form-group">
 								<label for="content">Content</label><br />
 								<div class="input-grup">
-							  		<textarea class="form-control" id="content" name="content"></textarea>
+							  		<textarea class="form-control" id="contentEdit" name="content"></textarea>
 								</div>
-								<input type="hidden" id="hiddenID" name="hiddenID">
+								<input type="hidden" id="hiddenIDEdit" name="hiddenID">
 							</div>
 							<input type="submit" class="btn btn-primary" value="Guardar"></p>
 						</div>
@@ -76,19 +60,18 @@
 				</div>
 				<div class="modal-body">
 
-					<form method="POST" action="create.php" onsubmit="validate()">
+					<form id="formAdd">
 						<div class="container">
 							<div class="form-group">						
-								<label for="title">Título</label>									
-								<input id="title" name="title" type="text" size="75" 
+								<label for="titleAdd">Título</label>									
+								<input id="titleAdd" name="title" type="text" size="75" 
 										class="form-control" autofocus/>
 							</div>
 							<div class="form-group">
-								<label for="content">Content</label><br />
+								<label for="contentAdd">Content</label><br />
 								<div class="input-grup">
-							  		<textarea class="form-control" id="content" name="content"></textarea>
+							  		<textarea class="form-control" id="contentAdd" name="content"></textarea>
 								</div>
-								<input type="hidden" id="hiddenID" name="hiddenID">
 							</div>
 							<input type="submit" class="btn btn-primary" value="Guardar"></p>
 						</div>
@@ -111,8 +94,8 @@
 				</div>
 				<div class="modal-body">
 					<p id="lblEliminar"></p>
-					<button id="buttonDelete" class="btn btn-danger" type="button" 
-							onclick="eliminar(this)">Eliminar
+					<button id="deleteButton" class="btn btn-danger" type="button" 
+							onclick="deleteClick(this)">Eliminar
 					</button>
 					<button class="btn" type="button" data-dismiss="modal">Cancelar</button>
 				</div>
@@ -142,48 +125,46 @@
 	<!--End modal windows-->
 
 	<script type="text/javascript">
-		//it receive a form and it validate if all the fields are complete
-		function validate(form)
-		{
-			var mensaje = "Debes escribir algo en los campos: \n";
-			var vacio = false;
+		const tbody = document.getElementById('tbody')
+		const properties =['title', 'content', 'created']
 
-			if( form.elements["title"].value == "" )
-			{
-				mensaje += "- Título\n";
-				vacio = true;
-			}
-			if( form.elements["content"].value == "")
-			{
-				mensaje += "- Contenido";
-				vacio = true;
-			}
-			if( vacio )
-				alert(mensaje);
+		const titleEdit = document.getElementById('titleEdit')
+		const contentEdit = document.getElementById('contentEdit')
+		const hiddenIDEdit = document.getElementById('hiddenIDEdit')
+		const formEdit = document.getElementById('formEdit')
 
-			return !vacio;
-		}
+		const titlAdd = document.getElementById('titleAdd')
+		const contentAdd = document.getElementById('contentAdd')
+		const formAdd = document.getElementById('formAdd')
+
+		const deleteButton = document.getElementById('deleteButton')
 
 		$(".newPost").click(function()
 		{
-			$("#title").val("");
-			$("#content").text("");
-			$("#hiddenID").val("");
+			$("#titleAdd").val("");
+			$("#contentAdd").val("");
 		})
 		
-		$(".edit").click(function()
+		//Like the buttons in the table are generated dinamically this method must be declared of this way
+		$("tbody").on('click', 'button.edit', function()
 		{
 			var idPost = $(this).val();
-			$("#title").val( $("#title" + idPost).text());
-			$("#content").text( $("#content" + idPost).text() );
-			$("#hiddenID").val(idPost);
+			let title = document.getElementById("tdtitle" + idPost);
+			titleEdit.value = title.textContent;
+
+			let content = document.getElementById("tdcontent" + idPost);
+			contentEdit.value = content.textContent;
+
+			hiddenIDEdit.value = idPost;
 		})
 
-		$(".delete").click(function()
+		//Like the buttons in the table are generated dinamically this method must be declared of this way
+		$("tbody").on('click', 'button.delete', function()
 		{
-			var postName =$("#title" + $(this).val()).text();
-			$("#lblEliminar").text("¿Estás seguro que deseas eliminar el post '" + postName + "'?");
-			$("#buttonDelete").val($(this).val());
+			let title = document.getElementById('tdtitle' + $(this).val());
+			console.log(title);
+			$("#lblEliminar").text("¿Estás seguro que deseas eliminar el post '" + title.textContent + "'?");
+			$("#deleteButton").val($(this).val());
 		})
 
 		$(".view").click(function()
@@ -198,5 +179,120 @@
 		{
 			location.href="delete.php?id=" + button.value;
 		}
+
+		function addRow(data)
+		{
+			let tr = document.createElement('tr');
+			tr.id = "tr" + data['id'];
+			properties.forEach(property => {
+				let td = document.createElement("td")
+				td.textContent = data[property]
+				td.id = 'td' + property + data['id']
+				tr.appendChild(td)			
+			})
+
+			let td = document.createElement("td");
+
+			let editButton = document.createElement("button")
+			editButton.value = data['id']
+			editButton.classList.add("btn")
+			editButton.classList.add("btn-info")
+			editButton.classList.add("edit")
+			editButton.type = "button"
+			editButton.className = "btn btn-info edit"
+			editButton.setAttribute('data-toggle', "modal")
+			editButton.setAttribute('data-target', "#editBlog")
+			editButton.textContent = "Editar"
+
+			td.appendChild(editButton)			
+
+			let deleteButton = document.createElement("button")
+			deleteButton.value = data['id']
+			deleteButton.classList.add("btn")
+			deleteButton.classList.add("btn-danger")
+			deleteButton.classList.add("delete")
+			deleteButton.type = "button"
+			deleteButton.className = "btn btn-danger delete"
+			deleteButton.setAttribute('data-toggle', "modal")
+			deleteButton.setAttribute('data-target', "#deleteBlog")
+			deleteButton.textContent = "Eliminar"
+
+			td.appendChild(deleteButton)
+
+			tr.appendChild(td)
+
+			tbody.appendChild(tr)
+			// console.log(JSON.stringify(data))
+		}
+
+		function editRow(data, idRow)
+		{
+			let tr = document.getElementById(idRow);
+			console.log(tr);
+			let tds = tr.childNodes;
+			console.log(tds);
+
+			for (var i = 0; i < 2; i++) 
+			{
+				tds[i].textContent = data[properties[i]]
+				console.log(tds[i].textContent);
+			}
+
+			let buttons = tds[3].childNodes;
+			buttons[0].value = data['id'];
+			buttons[1].value = data['id'];
+
+			//this line do close the modal but don´t retunrn the control to the page
+			// document.getElementById("editBlog").style.display = 'none';
+			$('#editBlog').modal('hide');
+		}
+
+		function deleteRow(id)
+		{
+			document.getElementById('tr' + id['id']).remove();
+		}
+
+		//Axios http methods
+		window.onload = () => {
+	      window.axios.get('postAPI.php')
+	        .then(({data}) => {
+        	// console.log(JSON.stringify(data))
+	          data.forEach(row => {
+	            addRow(row)
+	          })
+	        })
+	    }
+
+
+	    formEdit.addEventListener('submit', function(ev) {
+		  ev.preventDefault()
+
+		  window.axios.put('postAPI.php?id=' + hiddenIDEdit.value, { title: titleEdit.value, content: contentEdit.value })
+		    .then(({data})=> {
+		      editRow(data, 'tr' + data['id'])
+		      console.log(JSON.stringify(data))
+		    })
+		})
+
+		formAdd.addEventListener('submit', function(ev){
+			ev.preventDefault()
+
+			window.axios.post('postAPI.php', { title: titleAdd.value, content: contentAdd.value })
+				.then(({data})=> {
+					console.log(JSON.stringify(data))
+					addRow(data)
+					$('#addBlog').modal('hide');
+				})
+		})
+
+		function deleteClick(button){
+			window.axios.delete('postAPI.php?id=' + button.value)
+				.then(({data})=> {
+					console.log(JSON.stringify(data))
+					deleteRow(data)
+					$('#deleteBlog').modal('hide');
+				})
+		}
+
 	</script>
 <?php require_once(VIEW_PATH.'footer.inc.php'); ?>

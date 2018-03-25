@@ -40,6 +40,11 @@ class Post {
 		return self::getBySql($sql);
 	}
 
+	public static function getLastElement($id)
+	{
+		return self::getById($id);
+	}
+
 	public static function getById($id) {
 	
 		// Initialize result array
@@ -86,10 +91,6 @@ class Post {
 	}
 	
 	public function insert() {
-		
-		// Initialize affected rows
-		$affected_rows = FALSE;
-	
 		// Build database query
 		$sql = "insert into post (title, content) values (?, ?)";
 		
@@ -99,6 +100,9 @@ class Post {
 		// Get instance of statement
 		$statement = $database->stmt_init();
 		
+		//It´ll save de if of the inserted element
+		$lastId = 0;
+
 		// Prepare query
 		if ($statement->prepare($sql)) {
 			
@@ -108,9 +112,9 @@ class Post {
 			// Execute statement
 			$statement->execute();
 			
-			// Get affected rows
-			$affected_rows = $database->affected_rows;
-				
+			//Save de id of the inserted element
+			$lastId = $database->insert_id;
+
 			// Close statement
 			$statement->close();
 		}
@@ -118,8 +122,7 @@ class Post {
 		// Close database connection
 		$database->close();
 
-		// Return affected rows
-		return $affected_rows;			
+		return self::getLastElement($lastId);			
 	}
 
 	public function update() {

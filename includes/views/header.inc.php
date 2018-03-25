@@ -17,10 +17,11 @@
 			top: 136; /* Posicionamos la cabecera pegada arriba */
 			position: fixed; /* Hacemos que la cabecera tenga una posición fija */
 			height: 140px;
-			padding-left: 15px
+			padding-left: 15px;
   		}
   	</style>
-<head>
+  	<script src="axios.js"></script>
+</head>
 	
 <body>
 
