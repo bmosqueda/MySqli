@@ -1,3 +1,3 @@
-<script>
-  alert('hola');
-</script>
+(function() {
+  alert('js');
+})();
